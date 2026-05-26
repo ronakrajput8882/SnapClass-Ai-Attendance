@@ -70,8 +70,31 @@ def get_student_subjects(student_id):
     return response.data
 
 def get_student_attendance(student_id):
-    response = supabase.table('attendance_logs').select('*, subjects(*)').eq('student_id', student_id).execute()
-    return response.data
+    response = (
+        supabase
+        .table("attendance_logs")
+        .select("*, subjects(*)")
+        .eq("student_id", student_id)
+        .execute()
+    )
+
+    logs = response.data
+
+    for log in logs:
+        if log.get("timestamp"):
+            utc_time = datetime.fromisoformat(
+                log["timestamp"]
+            )
+
+            india_time = utc_time.astimezone(
+                ZoneInfo("Asia/Kolkata")
+            )
+
+            log["timestamp"] = india_time.strftime(
+                "%d-%m-%Y %I:%M %p"
+            )
+
+    return logs
 
 def create_attendance(logs):
     unique_logs = []
