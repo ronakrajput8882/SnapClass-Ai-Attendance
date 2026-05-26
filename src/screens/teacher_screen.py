@@ -1,5 +1,6 @@
 import streamlit as st
-
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from src.ui.base_layout import style_background_dashboard, style_base_layout
 
 from src.components.header import header_dashboard
@@ -242,22 +243,26 @@ def teacher_tab_attendance_records():
 
     records = get_attendance_for_teacher(teacher_id)
 
-    if not records:
-        return
-    
-    data = []
-
     for r in records:
         ts = r.get("timestamp")
 
         india_time = None
 
         if ts:
-            utc_time = datetime.fromisoformat(ts)
+            try:
+                # raw ISO timestamp from DB
+                utc_time = datetime.fromisoformat(ts)
 
-            india_time = utc_time.astimezone(
-            ZoneInfo("Asia/Kolkata")
-            )
+                india_time = utc_time.astimezone(
+                    ZoneInfo("Asia/Kolkata")
+                )
+
+            except ValueError:
+                # already formatted earlier
+                india_time = datetime.strptime(
+                    ts,
+                    "%d-%m-%Y %I:%M %p"
+                )
 
         data.append({
             "ts_group": (
@@ -266,7 +271,7 @@ def teacher_tab_attendance_records():
             ),
 
             "Time": (
-                india_time.strftime("%Y-%m-%d %I:%M %p")
+                india_time.strftime("%d-%m-%Y %I:%M %p")
                 if india_time else "N/A"
             ),
 
