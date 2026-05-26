@@ -76,23 +76,23 @@ def get_student_attendance(student_id):
 def create_attendance(logs):
     unique_logs = []
 
+    # one timestamp for whole class session
+    session_timestamp = datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).isoformat()
+
     for log in logs:
         student_id = log["student_id"]
         subject_id = log["subject_id"]
 
-        # Kolkata time
-        timestamp = datetime.now(
-            ZoneInfo("Asia/Kolkata")
-        ).isoformat()
-
-        log["timestamp"] = timestamp
+        log["timestamp"] = session_timestamp
 
         existing = (
             supabase.table("attendance_logs")
             .select("id")
             .eq("student_id", student_id)
             .eq("subject_id", subject_id)
-            .eq("timestamp", timestamp)
+            .eq("timestamp", session_timestamp)
             .limit(1)
             .execute()
         )
