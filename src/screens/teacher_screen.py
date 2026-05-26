@@ -248,16 +248,36 @@ def teacher_tab_attendance_records():
     data = []
 
     for r in records:
-        ts = r.get('timestamp')
+        ts = r.get("timestamp")
+
+        india_time = None
+
+        if ts:
+            utc_time = datetime.fromisoformat(ts)
+
+            india_time = utc_time.astimezone(
+            ZoneInfo("Asia/Kolkata")
+            )
 
         data.append({
-            "ts_group": ts.split(".")[0] if ts else None,
-            "Time": datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N'A",
-            "Subject": r['subjects']['name'],
-            "Subject Code":r['subjects']['subject_code'],
-            "is_present": bool(r.get('is_present', False))
-        })
+            "ts_group": (
+                india_time.strftime("%Y-%m-%d %H:%M:%S")
+                if india_time else None
+            ),
 
+            "Time": (
+                india_time.strftime("%Y-%m-%d %I:%M %p")
+                if india_time else "N/A"
+            ),
+
+            "Subject": r["subjects"]["name"],
+
+            "Subject Code": r["subjects"]["subject_code"],
+
+            "is_present": bool(
+                r.get("is_present", False)
+            )
+        })
 
     df = pd.DataFrame(data)
 
