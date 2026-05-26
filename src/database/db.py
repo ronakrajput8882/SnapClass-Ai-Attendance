@@ -134,5 +134,28 @@ def create_attendance(logs):
     return []
 
 def get_attendance_for_teacher(teacher_id):
-    response = supabase.table('attendance_logs').select("*, subjects!inner(*)").eq('subjects.teacher_id', teacher_id).execute()
-    return response.data
+    response = (
+        supabase
+        .table("attendance_logs")
+        .select("*, subjects!inner(*)")
+        .eq("subjects.teacher_id", teacher_id)
+        .execute()
+    )
+
+    logs = response.data
+
+    for log in logs:
+        if log.get("timestamp"):
+            utc_time = datetime.fromisoformat(
+                log["timestamp"]
+            )
+
+            india_time = utc_time.astimezone(
+                ZoneInfo("Asia/Kolkata")
+            )
+
+            log["timestamp"] = india_time.strftime(
+                "%d-%m-%Y %I:%M %p"
+            )
+
+    return logs
