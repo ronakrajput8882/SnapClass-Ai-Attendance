@@ -1,5 +1,7 @@
 from src.database.config import supabase
 import bcrypt
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def hash_pass(pwd):
     return bcrypt.hashpw(pwd.encode(), bcrypt.gensalt()).decode()
@@ -77,7 +79,13 @@ def create_attendance(logs):
     for log in logs:
         student_id = log["student_id"]
         subject_id = log["subject_id"]
-        timestamp = log["timestamp"]
+
+        # Kolkata time
+        timestamp = datetime.now(
+            ZoneInfo("Asia/Kolkata")
+        ).isoformat()
+
+        log["timestamp"] = timestamp
 
         existing = (
             supabase.table("attendance_logs")
@@ -88,6 +96,7 @@ def create_attendance(logs):
             .limit(1)
             .execute()
         )
+
         if not existing.data:
             unique_logs.append(log)
 
