@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=2,12,24&height=200&section=header&text=📸%20SnapClass%20AI%20Attendance&fontSize=44&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Smart%20Attendance%20via%20Face%20%%20Voice%20Recognition&descAlignY=60&descAlign=50" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=2,12,24&height=200&section=header&text=📸%20SnapClass%20AI%20Attendance&fontSize=44&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Smart%20Attendance%20via%20Face%20%Voice%20Recognition&descAlignY=60&descAlign=50" width="100%"/>
 
 <div align="center">
 
