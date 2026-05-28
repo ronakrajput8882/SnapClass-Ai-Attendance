@@ -9,13 +9,7 @@ from src.ui.base_layout import (
     style_background_dashboard,
     style_base_layout,
 )
-from src.screens.teacher_screen_login import (
-    teacher_screen_login,
-)
 
-from src.screens.teacher_screen_register import (
-    teacher_screen_register,
-)
 from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
 from src.components.subject_card import subject_card
